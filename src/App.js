@@ -1,25 +1,63 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from "react";
+import "./App.css";
+import Car from "./car/Car";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+class App extends Component {
+  state = {
+    cars: [
+      { name: "Ford", year: 2018 },
+      { name: "Audi", year: 2016 },
+      { name: "Mazda", year: 2010 },
+    ],
+    pageTitle: "React components",
+  };
+
+  changeTitleHandle = (newTitle) => {
+    this.setState({
+      pageTitle: newTitle,
+    });
+  };
+
+  changeInputFromValue = (event) => {
+    this.setState({
+      pageTitle: event.target.value
+    })
+  }
+//атрибут onChange позволяет следить за состоянием инпута
+//данный атрибут передаёт состояние event к которому можно 
+// обратиться и прочитать значение
+  render() {
+    const cars = this.state.cars;
+
+    return (
+      <div>
+        <h1>{this.state.pageTitle}</h1>
+        <button
+          onClick={this.changeTitleHandle.bind(this, "changed from title")}
         >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+          change title
+        </button>
+
+        <input onChange={this.changeInputFromValue}></input>
+
+        <Car
+          name={cars[0].name}
+          year={cars[0].year}
+          changeTitle={this.changeTitleHandle.bind(this, cars[0].name)}
+        ></Car>
+        <Car
+          name={cars[1].name}
+          year={cars[1].year}
+          changeTitle={() => this.changeTitleHandle(cars[1].name)}
+        ></Car>
+        <Car
+          name={cars[2].name}
+          year={cars[2].year}
+          changeTitle={() => this.changeTitleHandle(cars[2].name)}
+        ></Car>
+      </div>
+    );
+  }
 }
 
 export default App;
