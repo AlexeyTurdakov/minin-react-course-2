@@ -10,6 +10,7 @@ class App extends Component {
       { name: "Mazda", year: 2010 },
     ],
     pageTitle: "React components",
+    toggleButton: false, // (2)
   };
 
   changeTitleHandle = (newTitle) => {
@@ -20,14 +21,16 @@ class App extends Component {
 
   changeInputFromValue = (event) => {
     this.setState({
-      pageTitle: event.target.value
-    })
-  }
-//атрибут onChange позволяет следить за состоянием инпута
-//данный атрибут передаёт состояние event к которому можно 
-// обратиться и прочитать значение
+      pageTitle: event.target.value,
+    });
+  };
+  // (1)
+  toggleButtonFunction = () => {
+    this.setState({ toggleButton: !this.state.toggleButton });
+  };
+
   render() {
-    const cars = this.state.cars;
+ 
 
     return (
       <div>
@@ -37,24 +40,24 @@ class App extends Component {
         >
           change title
         </button>
-
+        <button onClick={this.toggleButtonFunction}>Toggle</button>
         <input onChange={this.changeInputFromValue}></input>
+        {this.state.toggleButton
+          ? this.state.cars.map((car, index) => {
+              return (
+                <Car
+                  key={index}
+                  name={car.name}
+                  year={car.year}
+                  changeTitle={() => this.changeTitleHandle(car.name)}
+                />
+              );
+            })
+          : null}
 
-        <Car
-          name={cars[0].name}
-          year={cars[0].year}
-          changeTitle={this.changeTitleHandle.bind(this, cars[0].name)}
-        ></Car>
-        <Car
-          name={cars[1].name}
-          year={cars[1].year}
-          changeTitle={() => this.changeTitleHandle(cars[1].name)}
-        ></Car>
-        <Car
-          name={cars[2].name}
-          year={cars[2].year}
-          changeTitle={() => this.changeTitleHandle(cars[2].name)}
-        ></Car>
+       
+
+
       </div>
     );
   }
