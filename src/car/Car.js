@@ -6,10 +6,11 @@ import React from "react";
 
 const car = (props) => {
   return (
-    <div>
+    <div style={{ border: "1px solid black" }}>
       <h2>This is a car {props.name}</h2>
       <h2>This is a year {props.year}</h2>
-      <button onClick={props.changeTitle}>Click</button>
+      <input type="text" onChange={props.onChangeName} value={props.name} />
+      <button onClick={props.onDelete}>Delete</button>
     </div>
   );
 };

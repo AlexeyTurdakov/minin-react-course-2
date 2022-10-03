@@ -10,7 +10,7 @@ class App extends Component {
       { name: "Mazda", year: 2010 },
     ],
     pageTitle: "React components",
-    toggleButton: false, // (2)
+    toggleButton: false,
   };
 
   changeTitleHandle = (newTitle) => {
@@ -24,14 +24,30 @@ class App extends Component {
       pageTitle: event.target.value,
     });
   };
-  // (1)
+
   toggleButtonFunction = () => {
     this.setState({ toggleButton: !this.state.toggleButton });
   };
+  //реализуем как обычную функцию
+  onChangeName(name, index) {
+    const newNameCar = name;
+    const newArrCars = this.state.cars;
+    newArrCars[index].name = newNameCar;
+    this.setState({
+      cars: newArrCars,
+    });
+  }
+
+  // удаление элемента массива
+  onDeleteHandler(index) {
+    const cars = this.state.cars.concat();
+    cars.splice(index, 1);
+    this.setState({
+      cars,
+    });
+  }
 
   render() {
- 
-
     return (
       <div>
         <h1>{this.state.pageTitle}</h1>
@@ -49,15 +65,14 @@ class App extends Component {
                   key={index}
                   name={car.name}
                   year={car.year}
-                  changeTitle={() => this.changeTitleHandle(car.name)}
+                  onChangeName={(event) =>
+                    this.onChangeName(event.target.value, index)
+                  }
+                  onDelete={this.onDeleteHandler.bind(this, index)}
                 />
               );
             })
           : null}
-
-       
-
-
       </div>
     );
   }
