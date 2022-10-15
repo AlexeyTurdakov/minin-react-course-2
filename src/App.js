@@ -1,17 +1,24 @@
 import React, { Component } from "react";
 import "./App.css";
 import Car from "./car/Car";
-
+import "./App.scss";
+//экспортируем и key перемещаем в errorBoundary
+// так как он является корневым
+import ErrorBoundary from "./ErrorBoundary/ErrorBoundary";
 class App extends Component {
-  state = {
-    cars: [
-      { name: "Ford", year: 2018 },
-      { name: "Audi", year: 2016 },
-      { name: "Mazda", year: 2010 },
-    ],
-    pageTitle: "React components",
-    toggleButton: false,
-  };
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      cars: [
+        { name: "Ford", year: 2018 },
+        { name: "Audi", year: 2016 },
+        { name: "Mazda", year: 2010 },
+      ],
+      pageTitle: "React components",
+      toggleButton: true,
+    };
+  }
 
   changeTitleHandle = (newTitle) => {
     this.setState({
@@ -28,7 +35,7 @@ class App extends Component {
   toggleButtonFunction = () => {
     this.setState({ toggleButton: !this.state.toggleButton });
   };
-  //реализуем как обычную функцию
+
   onChangeName(name, index) {
     const newNameCar = name;
     const newArrCars = this.state.cars;
@@ -38,7 +45,6 @@ class App extends Component {
     });
   }
 
-  // удаление элемента массива
   onDeleteHandler(index) {
     const cars = this.state.cars.concat();
     cars.splice(index, 1);
@@ -48,9 +54,14 @@ class App extends Component {
   }
 
   render() {
+    const apiUrl = "http://127.0.0.1:3000";
+    fetch(apiUrl, {method: "POST"})
+      .then((response) => response.json())
+      .then((data) => console.log("This is your data", data));
+
     return (
       <div>
-        <h1>{this.state.pageTitle}</h1>
+        <h1>{this.props.title}</h1>
         <button
           onClick={this.changeTitleHandle.bind(this, "changed from title")}
         >
@@ -61,15 +72,16 @@ class App extends Component {
         {this.state.toggleButton
           ? this.state.cars.map((car, index) => {
               return (
-                <Car
-                  key={index}
-                  name={car.name}
-                  year={car.year}
-                  onChangeName={(event) =>
-                    this.onChangeName(event.target.value, index)
-                  }
-                  onDelete={this.onDeleteHandler.bind(this, index)}
-                />
+                <ErrorBoundary key={index}>
+                  <Car
+                    name={car.name}
+                    year={car.year}
+                    onChangeName={(event) =>
+                      this.onChangeName(event.target.value, index)
+                    }
+                    onDelete={this.onDeleteHandler.bind(this, index)}
+                  />
+                </ErrorBoundary>
               );
             })
           : null}
